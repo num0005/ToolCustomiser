@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ToolCustomiser": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\SteamLibrary\\steamapps\\common\\Chelan_1\\tool.exe\""
+    }
+  }
+}
