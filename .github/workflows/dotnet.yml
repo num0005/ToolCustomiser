@@ -54,6 +54,8 @@ jobs:
       DOTNET_CLI_TELEMETRY_OPTOUT : true
     steps:
     - uses: actions/checkout@v2
+    - name: Install compiler toolchain
+      run: sudo apt-get install clang zlib1g-dev libkrb5-dev
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
