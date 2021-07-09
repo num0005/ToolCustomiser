@@ -123,11 +123,11 @@ namespace ToolCustomiser
 
             while (true)
             {
-                string[] topLevelCommands = new[] { "exit", "save", "debug", "final" };
+                string[] topLevelCommands = new[] { "quit", "export", "import", "save", "debug", "final" };
                 string command = Sharprompt.Prompt.Select("Commands", topLevelCommands);
                 switch (command[0])
                 {
-                    case 'e':
+                    case 'q':
                         return;
                     case 's':
                         Console.WriteLine("Saving configuration!");
@@ -147,6 +147,36 @@ namespace ToolCustomiser
                         break;
                     case 'f':
                         CLIQuality(toolConfig.FinalQuality, "Final");
+                        break;
+                    case 'e':
+                        string newFileName = Sharprompt.Prompt.Input<string>("Export file name", "tool.custom");
+                        using (FileStream configFile = File.Open(newFileName, FileMode.Create))
+                        {
+                            ExternalConfig externalConfig = new(toolConfig);
+                            externalConfig.Write(configFile);
+                            Console.WriteLine($"Exported config to \"{newFileName}\"!");
+                        }
+                        break;
+                    case 'i':
+                        string importFileName = Sharprompt.Prompt.Input<string>("Import file name", "tool.custom");
+                        if (File.Exists(importFileName))
+                        {
+                            ExternalConfig externalConfig = new();
+                            using (FileStream fileStream = File.OpenRead(importFileName))
+                            {
+                                if (externalConfig.Read(fileStream))
+                                {
+                                    toolConfig = externalConfig.ToolConfig;
+                                    Console.WriteLine($"Imported config from \"{importFileName}\"!");
+                                }
+                                else
+                                    Console.WriteLine($"Unable to read \"{importFileName}\"!");
+                            }
+                        } else
+                        {
+                            Console.WriteLine($"\"{importFileName}\" doesn't exist!");
+                        }
+                        
                         break;
                 }
             }
@@ -179,7 +209,7 @@ namespace ToolCustomiser
                                 Console.WriteLine($"Can't find default config in \"{fileName}\" , are you sure this a HEK executabe?");
                             } else
                             {
-                                Console.WriteLine($"Scanner found default configuration at {found.Value}");
+                                Console.WriteLine($"Scanner found default configuration at {found.Value:X}");
                                 customiserConfig.Offset = found.Value;
                                 CLIMain(file, customiserConfig, null);
                             }
