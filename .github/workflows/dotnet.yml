@@ -46,14 +46,41 @@ jobs:
       with:
         name: win-arm64
         path: ToolCustomiser/bin/Release/net5.0/win-arm64/publish/
+        
+  build-linux:
 
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT : true
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.300'
+    - name: Install dependencies
+      run: dotnet restore ToolCustomiser
+    - name: Build
+      run: dotnet build --configuration Release ToolCustomiser
+    - name: Test
+      run: dotnet test -v n ToolCustomiser
+      
+    - name: Publish Linux (x64)
+      run: dotnet publish -c Release -r linux-x64 ToolCustomiser
+      
+    - name: Upload artifact Linux (x64)
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux-x64
+        path: ToolCustomiser/bin/Release/net5.0/linux-x64/publish/
+        
       
   release:
     if: |
       github.event.action != 'pull_request' &&
       github.ref == 'refs/heads/master' &&
       github.repository == 'num0005/ToolCustomiser'
-    needs: build-windows
+    needs: [build-windows, build-linux]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/download-artifact@v2
@@ -61,7 +88,7 @@ jobs:
       run: |
         zip -r win-x64.zip win-x64
         zip -r win-arm64.zip win-arm64
-#        zip -r linux-x64.zip linux-x64
+        zip -r linux-x64.zip linux-x64
 #        zip -r linux-arm64.zip linux-arm64
 #        zip -r osx-x64.zip osx-x64
 #        zip -r generic.zip generic
