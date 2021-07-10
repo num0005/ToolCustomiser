@@ -44,10 +44,10 @@ namespace ToolCustomiser
                         level.MinimumSideLength = Sharprompt.Prompt.Input<float>("Enter new minimum side length", level.MinimumSideLength);
                         continue;
                     case 'u':
-                        level.MaxInitialLitLength = Sharprompt.Prompt.Input<float>("Enter new max initial unlit length", level.MaxInitialLitLength);
+                        level.MaxInitialUnlitLength = Sharprompt.Prompt.Input<float>("Enter new max initial unlit length", level.MaxInitialUnlitLength);
                         continue;
                     case 'L':
-                        level.MaxInitialUnlitLength = Sharprompt.Prompt.Input<float>("Enter new max initial lit length", level.MaxInitialUnlitLength);
+                        level.MaxInitialLitLength = Sharprompt.Prompt.Input<float>("Enter new max initial lit length", level.MaxInitialLitLength);
                         continue;
                 }
             }
@@ -95,13 +95,13 @@ namespace ToolCustomiser
                                     CLIDetialLevel(level.LODs[0]);
                                     break;
                                 case 'M':
-                                    CLIDetialLevel(level.LODs[0]);
+                                    CLIDetialLevel(level.LODs[1]);
                                     break;
                                 case 'L':
-                                    CLIDetialLevel(level.LODs[0]);
+                                    CLIDetialLevel(level.LODs[2]);
                                     break;
                                 case 'T':
-                                    CLIDetialLevel(level.LODs[0]);
+                                    CLIDetialLevel(level.LODs[3]);
                                     break;
                             }
                             continue;
